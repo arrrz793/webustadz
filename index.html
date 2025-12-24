@@ -10,7 +10,6 @@
   box-sizing:border-box;
   font-family:system-ui,-apple-system,Segoe UI,Roboto;
 }
-
 body{
   margin:0;
   min-height:100vh;
@@ -20,7 +19,6 @@ body{
   color:#fff;
 }
 
-/* ===== WRAPPER TRANSPARAN ===== */
 .wrapper{
   width:100%;
   max-width:430px;
@@ -40,16 +38,16 @@ body{
 h1{
   text-align:center;
   margin-bottom:6px;
+  white-space:nowrap;
 }
-
 .subtitle{
   text-align:center;
   opacity:.85;
   font-size:14px;
   margin-bottom:18px;
+  white-space:nowrap;
 }
 
-/* ===== INPUT ===== */
 textarea{
   width:100%;
   min-height:90px;
@@ -79,47 +77,49 @@ button{
   color:#fff;
   font-size:16px;
   font-weight:600;
-  transition:transform .2s ease, box-shadow .2s ease;
-}
-button:active{
-  transform:scale(.97);
 }
 
-/* ===== RESULT ===== */
+button:active{transform:scale(.97)}
+
 .result{
   margin-top:18px;
   padding:12px;
   background:rgba(0,0,0,0.35);
   border-radius:18px;
-  animation:fadeUp .5s ease;
 }
 
-/* ===== FOTO (FIX UKURAN) ===== */
 .photo-box{
   position:relative;
   overflow:hidden;
   border-radius:16px;
-  aspect-ratio:3/4;
-  background:#000;
 }
 
 .photo-box img{
   width:100%;
-  height:100%;
-  object-fit:cover;
   display:block;
 }
 
-/* ===== KOTAK SOAL ===== */
+/* WATERMARK */
+.watermark{
+  position:absolute;
+  bottom:8px;
+  right:10px;
+  font-size:11px;
+  color:#fff;
+  opacity:.75;
+  z-index:5;
+}
+
+/* KOTAK SOAL */
 .soalan-box{
   position:absolute;
   top:14px;
   left:50%;
   transform:translateX(-50%);
   width:82%;
+  background:#fff;
   border-radius:14px;
   overflow:hidden;
-  background:#fff;
 }
 
 .soalan-header{
@@ -136,12 +136,14 @@ button:active{
   color:#000;
   text-align:center;
   font-weight:700;
-  font-size:22px; /* ukuran awal seperti contoh */
+  font-size:22px;
   line-height:1.25;
-  min-height:60px;
+  height:110px; /* PENTING: box tetap */
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-/* ===== ACTION BUTTON ===== */
 .actions{
   display:flex;
   gap:10px;
@@ -152,75 +154,96 @@ button:active{
   background:#2f3f50;
 }
 
-/* FORCE HILANGKAN ICON APAPUN */
-.actions button::before,
-.actions button::after,
-.actions i,
-.actions svg{
-  display:none !important;
+.footer{
+  margin-top:24px;
+  text-align:center;
+  font-size:13px;
+  opacity:.8;
+  line-height:1.6;
 }
 </style>
 </head>
 
 <body>
-
 <div class="wrapper">
-  <h1>Ustadz Quote Generator</h1>
-  <div class="subtitle">Buat Soalan Ustadz dengan mudah. Hanya buat have fun</div>
 
-  <textarea id="input" maxlength="200" placeholder="Tulis soal di sini..."></textarea>
-  <div class="counter"><span id="count">0</span>/200</div>
+<h1>Ustadz Quote Generator</h1>
+<div class="subtitle">Buat Soalan Ustadz dengan mudah. Hanya buat have fun</div>
 
-  <button onclick="generate()">Generate</button>
+<textarea id="input" maxlength="200" placeholder="Tulis soal di sini..."></textarea>
+<div class="counter"><span id="count">0</span>/200</div>
 
-  <!-- RESULT (SUDAH ADA FOTO CONTOH) -->
-  <div class="result" id="result">
-    <div class="photo-box">
-      <img src="foto.jpg" alt="ustadz">
-      <div class="soalan-box">
-        <div class="soalan-header">Soalan</div>
-        <div class="soalan-text" id="soalanText">
-          Contoh soal akan muncul di sini
-        </div>
+<button onclick="generate()">Generate</button>
+
+<div class="result" id="result">
+  <div class="photo-box" id="capture">
+    <img src="foto.jpg" alt="ustadz">
+    <div class="watermark">Developed By Arrz</div>
+
+    <div class="soalan-box">
+      <div class="soalan-header">Soalan</div>
+      <div class="soalan-text" id="soalanText">
+        Pak ustadz bagaimana hukumnya orang yang menikah dengan anime?
       </div>
     </div>
+  </div>
 
-    <div class="actions">
-      <button type="button">Download</button>
-      <button type="button" onclick="resetAll()">Reset</button>
-    </div>
+  <div class="actions">
+    <button onclick="downloadImage()">Download</button>
+    <button onclick="resetAll()">Reset</button>
   </div>
 </div>
 
+<div class="footer">
+Developed By Arrz<br>
+My Number<br>
++6285786145216<br>
+My Telegram<br>
+@arzoffc
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 <script>
-const input = document.getElementById("input");
-const count = document.getElementById("count");
-const soalanText = document.getElementById("soalanText");
+const input=document.getElementById("input");
+const count=document.getElementById("count");
+const soalanText=document.getElementById("soalanText");
 
 input.addEventListener("input",()=>{
-  count.textContent = input.value.length;
+  count.textContent=input.value.length;
 });
 
 function autoResize(){
-  let size = 22;
-  soalanText.style.fontSize = size+"px";
-  while(soalanText.scrollHeight > soalanText.offsetHeight && size > 12){
+  let size=22;
+  soalanText.style.fontSize=size+"px";
+  while(soalanText.scrollHeight > soalanText.clientHeight && size>12){
     size--;
-    soalanText.style.fontSize = size+"px";
+    soalanText.style.fontSize=size+"px";
   }
 }
 
 function generate(){
   if(!input.value.trim()) return;
-  soalanText.textContent = input.value;
+  soalanText.textContent=input.value;
   autoResize();
 }
 
 function resetAll(){
   input.value="";
   count.textContent=0;
-  soalanText.textContent="Contoh soal akan muncul di sini";
+  soalanText.textContent="Pak ustadz bagaimana hukumnya orang yang menikah dengan anime?";
   soalanText.style.fontSize="22px";
+}
+
+function downloadImage(){
+  html2canvas(document.getElementById("capture")).then(canvas=>{
+    const a=document.createElement("a");
+    a.href=canvas.toDataURL("image/png");
+    a.download="ustadz-quote.png";
+    a.click();
+  });
 }
 </script>
 
