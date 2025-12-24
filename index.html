@@ -15,35 +15,41 @@
 
 body{
   margin:0;
-  background:#1f2a3a;
+  background:#0f172a;
   color:#fff;
   display:flex;
   justify-content:center;
 }
 
-.container{
+.wrapper{
   width:100%;
   max-width:420px;
+  padding:14px;
+}
+
+.frame{
+  background:rgba(59,130,246,0.12);
+  border:2px solid rgba(59,130,246,0.35);
+  border-radius:22px;
   padding:16px;
 }
 
+/* ===== HEADER ===== */
 h1{
   text-align:center;
-  margin:8px 0 2px;
+  margin:6px 0 4px;
   font-size:24px;
 }
 
 .subtitle{
   text-align:center;
   font-size:14px;
-  opacity:.85;
+  opacity:.9;
   margin-bottom:14px;
 }
+.subtitle span{display:block}
 
-.subtitle span{
-  display:block;
-}
-
+/* ===== INPUT ===== */
 textarea{
   width:100%;
   height:90px;
@@ -67,15 +73,16 @@ button{
   padding:14px;
   border:none;
   border-radius:14px;
-  background:#6ea8fe;
+  background:#60a5fa;
   color:#fff;
   font-size:16px;
   margin-top:12px;
   font-weight:600;
 }
 
+/* ===== RESULT ===== */
 .result-card{
-  background:rgba(255,255,255,0.05);
+  background:rgba(15,23,42,0.6);
   border-radius:20px;
   padding:14px;
   margin-top:16px;
@@ -85,46 +92,51 @@ button{
   position:relative;
   border-radius:18px;
   overflow:hidden;
+  height:420px; /* FIXED SIZE */
 }
 
+/* IMAGE FIXED */
 .photo-wrap img{
   width:100%;
-  display:block;
+  height:100%;
+  object-fit:cover;
 }
 
-/* === HEADER HITAM SOALAN === */
+/* SOALAN HEADER */
 .soalan-header{
   position:absolute;
   top:10px;
-  left:50%;
-  transform:translateX(-50%);
+  left:12px;
+  right:12px;
   background:#000;
   color:#fff;
-  padding:6px 18px;
-  border-radius:999px;
-  font-weight:600;
+  text-align:center;
+  padding:8px 0;
+  border-radius:12px;
+  font-weight:700;
   font-size:14px;
   z-index:2;
 }
 
-/* === TEKS SOALAN === */
+/* SOALAN TEXT */
 .soalan-text{
   position:absolute;
-  top:48px;
-  left:16px;
-  right:16px;
+  top:54px;
+  left:14px;
+  right:14px;
   background:#fff;
   color:#000;
-  padding:12px;
+  padding:14px;
   border-radius:14px;
-  font-weight:600;
+  font-weight:700;
   text-align:center;
-  max-height:90px;
+  height:90px;
   overflow:hidden;
-  font-size:15px;
+  font-size:18px;
   z-index:1;
 }
 
+/* BUTTONS */
 .action{
   display:flex;
   gap:10px;
@@ -133,24 +145,27 @@ button{
 
 .action button{
   flex:1;
-  background:#334155;
+  background:#1e293b;
 }
 
+/* FOOTER */
 footer{
-  margin-top:20px;
+  margin-top:18px;
   padding:14px;
-  border:2px solid rgba(255,255,255,0.4);
+  border:2px solid rgba(255,255,255,0.35);
   border-radius:14px;
   text-align:center;
   font-size:14px;
   font-weight:600;
-  opacity:.9;
+  opacity:.95;
 }
 </style>
 </head>
 
 <body>
-<div class="container">
+<div class="wrapper">
+
+<div class="frame">
 
 <h1>Ustadz Quote Generator</h1>
 <div class="subtitle">
@@ -194,6 +209,7 @@ placeholder="Tulis soalan di sini..."></textarea>
 </footer>
 
 </div>
+</div>
 
 <script>
 function countChar(){
@@ -205,28 +221,27 @@ function generate(){
   const text = document.getElementById("inputText").value.trim();
   const target = document.getElementById("soalanText");
   target.innerText = text || "Contoh Soalan Akan Muncul Di Sini";
-  adjustFont(target);
+  autoResizeText(target);
 }
 
-function adjustFont(el){
-  let size = 15;
+function autoResizeText(el){
+  let size = 18;
   el.style.fontSize = size+"px";
-  while(el.scrollHeight > el.clientHeight && size > 11){
+  while(el.scrollHeight > el.clientHeight && size > 12){
     size--;
     el.style.fontSize = size+"px";
   }
 }
 
 function downloadImage(){
-  const area = document.getElementById("capture");
-  html2canvas(area,{
+  html2canvas(document.getElementById("capture"),{
     scale:2,
     backgroundColor:null,
     useCORS:true
   }).then(canvas=>{
     const a = document.createElement("a");
-    a.download = "ustadz-quote.png";
-    a.href = canvas.toDataURL("image/png");
+    a.download="ustadz-quote.png";
+    a.href=canvas.toDataURL("image/png");
     a.click();
   });
 }
