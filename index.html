@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ustadz Quote Generator</title>
 
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 <style>
 *{
   box-sizing:border-box;
@@ -18,13 +20,12 @@ body{
   display:flex;
   justify-content:center;
   color:#fff;
-  padding-top:28px; /* TURUN */
+  padding-top:28px;
   transition:.3s;
 }
 
-/* ===== MODE TERANG ===== */
 body.light{
-  background:#5fa8ff; /* biru terang */
+  background:#5fa8ff;
   color:#000;
 }
 
@@ -32,19 +33,43 @@ body.light{
   width:100%;
   max-width:420px;
   margin:16px;
-  padding:14px; /* DIPERKECIL */
+  padding:14px;
   background:rgba(80,130,180,0.35);
   backdrop-filter:blur(10px);
   border-radius:20px;
-  transition:.3s;
+  position:relative; /* PENTING */
 }
 
 body.light .wrapper{
   background:#ffffff;
 }
 
-/* ===== HEADER ===== */
+/* TOGGLE (DIPINDAHKAN KE DALAM WRAPPER) */
+.toggle{
+  position:sticky;
+  top:12px;
+  margin-left:auto;
+  width:40px;
+  height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+  color:#000;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:18px;
+  z-index:10;
+}
+
+.header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
 h1{
+  flex:1;
   text-align:center;
   margin:4px 0;
   font-size:24px;
@@ -54,11 +79,9 @@ h1{
   text-align:center;
   font-size:14px;
   margin-bottom:12px;
-  opacity:.9;
   line-height:1.4;
 }
 
-/* ===== INPUT ===== */
 textarea{
   width:100%;
   min-height:88px;
@@ -68,7 +91,6 @@ textarea{
   background:rgba(255,255,255,.15);
   color:#fff;
   font-size:15px;
-  outline:none;
 }
 
 body.light textarea{
@@ -84,7 +106,6 @@ body.light textarea{
   margin-top:4px;
 }
 
-/* ===== BUTTON ===== */
 button{
   width:100%;
   margin-top:14px;
@@ -101,10 +122,9 @@ body.light button{
   color:#000;
 }
 
-/* ===== RESULT ===== */
 .result{
   margin-top:16px;
-  padding:10px; /* DIPERKECIL */
+  padding:10px;
   background:rgba(0,0,0,.35);
   border-radius:18px;
 }
@@ -113,7 +133,6 @@ body.light .result{
   background:#ffffff;
 }
 
-/* ===== PHOTO ===== */
 .photo-box{
   position:relative;
   overflow:hidden;
@@ -125,7 +144,6 @@ body.light .result{
   display:block;
 }
 
-/* ===== SOALAN ===== */
 .soalan-box{
   position:absolute;
   top:12px;
@@ -135,7 +153,6 @@ body.light .result{
   min-height:120px;
   border-radius:14px;
   background:#fff;
-  overflow:hidden;
 }
 
 .soalan-header{
@@ -155,7 +172,6 @@ body.light .result{
   line-height:1.25;
 }
 
-/* ===== ACTION ===== */
 .actions{
   display:flex;
   gap:10px;
@@ -164,7 +180,6 @@ body.light .result{
 
 .actions button{
   background:#2f3f50;
-  color:#fff;
 }
 
 body.light .actions button{
@@ -172,53 +187,44 @@ body.light .actions button{
   color:#000;
 }
 
-/* ===== FOOTER ===== */
 .footer{
   margin-top:16px;
-  padding:10px;
-  border:1px solid rgba(255,255,255,.5);
+  padding:12px;
+  border:2.5px solid rgba(255,255,255,.8);
   border-radius:12px;
   text-align:center;
-  font-size:13px;
+  font-size:14.5px;
+  font-weight:700;
 }
 
 body.light .footer{
   border-color:#000;
 }
-
-/* ===== TOGGLE ===== */
-.toggle{
-  position:fixed;
-  top:12px;
-  right:12px;
-  background:#fff;
-  color:#000;
-  border-radius:50%;
-  padding:8px 10px;
-  cursor:pointer;
-  font-size:16px;
-}
 </style>
 </head>
 
 <body>
-<div class="toggle" onclick="toggleMode()">🌙</div>
 
-<div class="wrapper">
-  <h1>Ustadz Quote Generator</h1>
+<div class="wrapper" id="capture">
+
+  <div class="header">
+    <h1>Ustadz Quote Generator</h1>
+    <div class="toggle" id="toggle">🌙</div>
+  </div>
+
   <div class="subtitle">
     Buat Soalan Ustadz Dengan Mudah<br>
     (Hanya Untuk Have Fun)
   </div>
 
-  <textarea id="input" maxlength="200" placeholder="Pak ustadz apa hukumnya..."></textarea>
+  <textarea id="input" maxlength="200"></textarea>
   <div class="counter"><span id="count">0</span>/200</div>
 
   <button onclick="generate()">Generate</button>
 
   <div class="result">
     <div class="photo-box">
-      <img src="foto.jpg" alt="ustadz">
+      <img src="foto.jpg">
       <div class="soalan-box">
         <div class="soalan-header">Soalan</div>
         <div class="soalan-text" id="soalanText"></div>
@@ -226,7 +232,7 @@ body.light .footer{
     </div>
 
     <div class="actions">
-      <button id="downloadBtn">Download</button>
+      <button onclick="downloadImage()">Download</button>
       <button onclick="resetAll()">Reset</button>
     </div>
   </div>
@@ -238,20 +244,22 @@ body.light .footer{
     My Telegram<br>
     @arzoffc
   </div>
+
 </div>
 
 <script>
-const input=document.getElementById("input");
-const count=document.getElementById("count");
-const soalanText=document.getElementById("soalanText");
+const input = document.getElementById("input");
+const count = document.getElementById("count");
+const soalanText = document.getElementById("soalanText");
+const toggle = document.getElementById("toggle");
 
 input.addEventListener("input",()=>{
-  count.textContent=input.value.length;
+  count.textContent = input.value.length;
 });
 
 function generate(){
-  if(!input.value.trim())return;
-  soalanText.textContent=input.value;
+  if(!input.value.trim()) return;
+  soalanText.textContent = input.value;
 }
 
 function resetAll(){
@@ -260,9 +268,20 @@ function resetAll(){
   soalanText.textContent="";
 }
 
-function toggleMode(){
+toggle.onclick = ()=>{
   document.body.classList.toggle("light");
+  toggle.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
+}
+
+function downloadImage(){
+  html2canvas(document.getElementById("capture"),{scale:2}).then(canvas=>{
+    const link=document.createElement("a");
+    link.download="ustadz-quote.png";
+    link.href=canvas.toDataURL("image/png");
+    link.click();
+  });
 }
 </script>
+
 </body>
 </html>
