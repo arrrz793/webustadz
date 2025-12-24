@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ustadz Quote Generator</title>
 
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 <style>
-*{
-  box-sizing:border-box;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto;
-}
+*{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto}
 body{
   margin:0;
   min-height:100vh;
@@ -35,37 +34,21 @@ body{
   to{opacity:1;transform:none}
 }
 
-h1{
-  text-align:center;
-  margin-bottom:6px;
-  white-space:nowrap;
-}
-.subtitle{
-  text-align:center;
-  opacity:.85;
-  font-size:14px;
-  margin-bottom:18px;
-  white-space:nowrap;
-}
+h1{text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;opacity:.8;font-size:14px;margin-bottom:18px}
 
 textarea{
   width:100%;
   min-height:90px;
   padding:14px;
   border-radius:14px;
-  border:1.5px solid rgba(255,255,255,0.7);
-  background:rgba(255,255,255,0.15);
+  border:1.5px solid rgba(255,255,255,.7);
+  background:rgba(255,255,255,.15);
   color:#fff;
   font-size:15px;
   outline:none;
 }
-
-.counter{
-  text-align:right;
-  font-size:12px;
-  opacity:.7;
-  margin-top:4px;
-}
+.counter{text-align:right;font-size:12px;opacity:.7;margin-top:4px}
 
 button{
   width:100%;
@@ -78,36 +61,23 @@ button{
   font-size:16px;
   font-weight:600;
 }
-
 button:active{transform:scale(.97)}
 
 .result{
   margin-top:18px;
   padding:12px;
-  background:rgba(0,0,0,0.35);
+  background:rgba(0,0,0,.35);
   border-radius:18px;
 }
 
 .photo-box{
   position:relative;
   overflow:hidden;
-  border-radius:16px;
+  border-radius:18px;
 }
-
 .photo-box img{
   width:100%;
   display:block;
-}
-
-/* WATERMARK */
-.watermark{
-  position:absolute;
-  bottom:8px;
-  right:10px;
-  font-size:11px;
-  color:#fff;
-  opacity:.75;
-  z-index:5;
 }
 
 /* KOTAK SOAL */
@@ -121,16 +91,13 @@ button:active{transform:scale(.97)}
   border-radius:14px;
   overflow:hidden;
 }
-
 .soalan-header{
   background:#111;
   color:#fff;
   text-align:center;
   padding:8px;
   font-weight:600;
-  font-size:14px;
 }
-
 .soalan-text{
   padding:14px;
   color:#000;
@@ -138,10 +105,15 @@ button:active{transform:scale(.97)}
   font-weight:700;
   font-size:22px;
   line-height:1.25;
-  height:110px; /* PENTING: box tetap */
-  display:flex;
-  align-items:center;
-  justify-content:center;
+}
+
+.watermark{
+  position:absolute;
+  bottom:10px;
+  right:12px;
+  font-size:12px;
+  opacity:.6;
+  color:#fff;
 }
 
 .actions{
@@ -149,18 +121,7 @@ button:active{transform:scale(.97)}
   gap:10px;
   margin-top:12px;
 }
-
-.actions button{
-  background:#2f3f50;
-}
-
-.footer{
-  margin-top:24px;
-  text-align:center;
-  font-size:13px;
-  opacity:.8;
-  line-height:1.6;
-}
+.actions button{background:#2f3f50}
 </style>
 </head>
 
@@ -168,24 +129,21 @@ button:active{transform:scale(.97)}
 <div class="wrapper">
 
 <h1>Ustadz Quote Generator</h1>
-<div class="subtitle">Buat Soalan Ustadz dengan mudah. Hanya buat have fun</div>
+<div class="subtitle">Buat soalan ustadz dengan mudah</div>
 
 <textarea id="input" maxlength="200" placeholder="Tulis soal di sini..."></textarea>
 <div class="counter"><span id="count">0</span>/200</div>
 
 <button onclick="generate()">Generate</button>
 
-<div class="result" id="result">
+<div class="result">
   <div class="photo-box" id="capture">
-    <img src="foto.jpg" alt="ustadz">
-    <div class="watermark">Developed By Arrz</div>
-
+    <img src="./foto.jpg">
     <div class="soalan-box">
       <div class="soalan-header">Soalan</div>
-      <div class="soalan-text" id="soalanText">
-        Pak ustadz bagaimana hukumnya orang yang menikah dengan anime?
-      </div>
+      <div class="soalan-text" id="soalanText">Soalan akan muncul di sini</div>
     </div>
+    <div class="watermark">Developed by Arrz</div>
   </div>
 
   <div class="actions">
@@ -194,17 +152,7 @@ button:active{transform:scale(.97)}
   </div>
 </div>
 
-<div class="footer">
-Developed By Arrz<br>
-My Number<br>
-+6285786145216<br>
-My Telegram<br>
-@arzoffc
 </div>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
 const input=document.getElementById("input");
@@ -218,14 +166,14 @@ input.addEventListener("input",()=>{
 function autoResize(){
   let size=22;
   soalanText.style.fontSize=size+"px";
-  while(soalanText.scrollHeight > soalanText.clientHeight && size>12){
+  while(soalanText.scrollHeight>soalanText.offsetHeight && size>12){
     size--;
     soalanText.style.fontSize=size+"px";
   }
 }
 
 function generate(){
-  if(!input.value.trim()) return;
+  if(!input.value.trim())return;
   soalanText.textContent=input.value;
   autoResize();
 }
@@ -233,16 +181,16 @@ function generate(){
 function resetAll(){
   input.value="";
   count.textContent=0;
-  soalanText.textContent="Pak ustadz bagaimana hukumnya orang yang menikah dengan anime?";
-  soalanText.style.fontSize="22px";
+  soalanText.textContent="Soalan akan muncul di sini";
 }
 
 function downloadImage(){
-  html2canvas(document.getElementById("capture")).then(canvas=>{
-    const a=document.createElement("a");
-    a.href=canvas.toDataURL("image/png");
-    a.download="ustadz-quote.png";
-    a.click();
+  const box=document.getElementById("capture");
+  html2canvas(box,{useCORS:true,scale:2}).then(canvas=>{
+    const link=document.createElement("a");
+    link.download="soalan-ustadz.png";
+    link.href=canvas.toDataURL("image/png");
+    link.click();
   });
 }
 </script>
