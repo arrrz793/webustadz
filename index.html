@@ -1,13 +1,19 @@
-<!DOCTYPE html><html lang="id">
+<!DOCTYPE html>
+<html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ustadz Quote Generator</title><style>
+<title>Ustadz Quote Generator</title>
+
+<!-- html2canvas (WAJIB UNTUK DOWNLOAD) -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<style>
 *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto}
 body{
   margin:0;
   min-height:100vh;
-  background:#0b1d30; /* biru tua */
+  background:#0b1d30;
   display:flex;
   justify-content:center;
   color:#fff;
@@ -18,7 +24,7 @@ body{
   max-width:420px;
   margin:16px;
   padding:16px;
-  background:rgba(80,130,180,0.35); /* biru muda transparan */
+  background:rgba(80,130,180,0.35);
   backdrop-filter:blur(10px);
   border-radius:20px;
 }
@@ -26,12 +32,12 @@ body{
 h1{
   text-align:center;
   margin:6px 0 4px;
-  font-size:24px; /* sedikit lebih besar */
+  font-size:24px;
 }
 .subtitle{
   text-align:center;
   opacity:.9;
-  font-size:15px; /* sedikit lebih besar */
+  font-size:15px;
   margin-bottom:14px;
   white-space:nowrap;
 }
@@ -93,7 +99,7 @@ button{
   left:50%;
   transform:translateX(-50%);
   width:82%;
-  min-height:130px; /* dikunci */
+  min-height:130px;
   border-radius:14px;
   overflow:hidden;
   background:#fff;
@@ -136,35 +142,52 @@ button{
 .footer{
   margin-top:16px;
   padding:10px;
-  border:1px solid rgba(255,255,255,0.4); /* garis tepi */
+  border:1px solid rgba(255,255,255,0.4);
   border-radius:12px;
   text-align:center;
   font-size:13px;
   opacity:.9;
 }
-</style></head><body>
-<div class="wrapper">  <h1>Ustadz Quote Generator</h1>
-  <div class="subtitle">Buat Soalan Ustadz Dengan Mudah, Hanya Untuk Have Fun.</div>  <textarea id="input" maxlength="200" placeholder="Pak ustadz apa hukumnya..."></textarea>  <div class="counter"><span id="count">0</span>/200</div><button onclick="generate()">Generate</button>
+</style>
+</head>
 
-  <div class="result" id="result">
+<body>
+<div class="wrapper">
+
+  <h1>Ustadz Quote Generator</h1>
+  <div class="subtitle">Buat Soalan Ustadz Dengan Mudah, Hanya Untuk Have Fun.</div>
+
+  <textarea id="input" maxlength="200" placeholder="Pak ustadz apa hukumnya..."></textarea>
+  <div class="counter"><span id="count">0</span>/200</div>
+
+  <button onclick="generate()">Generate</button>
+
+  <div class="result" id="result-card">
     <div class="photo-box">
       <img src="foto.jpg" alt="ustadz">
       <div class="soalan-box">
         <div class="soalan-header">Soalan</div>
         <div class="soalan-text" id="soalanText"></div>
       </div>
-    </div><div class="actions">
-  <button id="downloadBtn">Download</button>
-  <button onclick="resetAll()">Reset</button>
-</div>
+    </div>
 
-  </div>  <div class="footer">
+    <div class="actions">
+      <button onclick="downloadImage()">Download</button>
+      <button onclick="resetAll()">Reset</button>
+    </div>
+  </div>
+
+  <div class="footer">
     Developed By Arrz<br>
     My Number<br>
     +6285786145216<br>
     My Telegram<br>
     @arzoffc
-  </div></div><script>
+  </div>
+
+</div>
+
+<script>
 const input=document.getElementById("input");
 const count=document.getElementById("count");
 const soalanText=document.getElementById("soalanText");
@@ -193,5 +216,29 @@ function resetAll(){
   count.textContent=0;
   soalanText.textContent="";
 }
-</script></body>
+
+/* === DOWNLOAD FIX (ANDROID & VERCEL AMAN) === */
+function downloadImage(){
+  const target=document.getElementById("result-card");
+
+  html2canvas(target,{
+    scale:2,
+    useCORS:true,
+    backgroundColor:null
+  }).then(canvas=>{
+    canvas.toBlob(blob=>{
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement("a");
+      a.href=url;
+      a.download="ustadz-quote.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    },"image/png");
+  });
+}
+</script>
+
+</body>
 </html>
