@@ -34,7 +34,7 @@ body{
   padding:16px;
 }
 
-/* ===== HEADER ===== */
+/* HEADER */
 h1{
   text-align:center;
   margin:6px 0 4px;
@@ -49,7 +49,7 @@ h1{
 }
 .subtitle span{display:block}
 
-/* ===== INPUT ===== */
+/* INPUT */
 textarea{
   width:100%;
   height:90px;
@@ -80,7 +80,7 @@ button{
   font-weight:600;
 }
 
-/* ===== RESULT ===== */
+/* RESULT */
 .result-card{
   background:rgba(15,23,42,0.6);
   border-radius:20px;
@@ -95,48 +95,49 @@ button{
   height:420px;
 }
 
-/* IMAGE */
 .photo-wrap img{
   width:100%;
   height:100%;
   object-fit:cover;
 }
 
-/* ===== SOALAN HEADER (HITAM SEPERTI GAMBAR KE-2) ===== */
-.soalan-header{
+/* ===== SOALAN GABUNG ===== */
+.soalan-box{
   position:absolute;
-  top:12px;
-  left:14px;
-  right:14px;
+  top:16px;
+  left:16px;
+  right:16px;
+  height:120px; /* LEBIH KECIL */
+  background:#fff;
+  color:#000;
+  border-radius:16px;
+  overflow:hidden;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+}
+
+/* TITLE */
+.soalan-title{
   background:#000;
   color:#fff;
   text-align:center;
-  padding:10px 0;
-  border-radius:14px 14px 0 0;
   font-weight:700;
   font-size:14px;
-  z-index:2;
+  padding:8px 0;
 }
 
-/* ===== SOALAN BOX (UKURAN FIX, FONT AUTO) ===== */
+/* TEXT */
 .soalan-text{
-  position:absolute;
-  top:52px;
-  left:14px;
-  right:14px;
-  height:110px; /* FIXED */
-  background:#fff;
-  color:#000;
-  padding:16px;
-  border-radius:0 0 14px 14px;
-  font-weight:700;
-  text-align:center;
-  overflow:hidden;
+  flex:1;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:26px; /* AKAN DISCALE */
-  z-index:1;
+  padding:12px;
+  text-align:center;
+  font-weight:700;
+  font-size:24px;
+  overflow:hidden;
 }
 
 /* BUTTONS */
@@ -185,10 +186,11 @@ placeholder="Tulis soalan di sini..."></textarea>
 <div class="result-card">
   <div class="photo-wrap" id="capture">
 
-    <div class="soalan-header">Soalan</div>
-
-    <div class="soalan-text" id="soalanText">
-      Contoh Soalan Akan Muncul Di Sini
+    <div class="soalan-box">
+      <div class="soalan-title">Soalan</div>
+      <div class="soalan-text" id="soalanText">
+        Contoh Soalan Akan Muncul Di Sini
+      </div>
     </div>
 
     <img src="foto.jpg" alt="ustadz">
@@ -224,9 +226,9 @@ function generate(){
   autoResizeText(target);
 }
 
-/* FONT AUTO, BOX TETAP */
+/* AUTO FONT, BOX TETAP */
 function autoResizeText(el){
-  let size = 26;
+  let size = 24;
   el.style.fontSize = size + "px";
   while (el.scrollHeight > el.clientHeight && size > 14){
     size--;
