@@ -1,221 +1,239 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ustadz Quote Generator</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ustadz Quote Generator</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: linear-gradient(180deg, #0b1626, #0f223d);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-    }
+<style>
+*{
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
 
-    /* === BINGKAI UTAMA === */
-    .frame {
-      width: 100%;
-      max-width: 420px;
-      padding: 18px;
-      border-radius: 20px;
-      background: rgba(30, 70, 120, 0.35);
-      border: 1px solid rgba(120, 170, 255, 0.35);
-      box-shadow: 0 0 25px rgba(0,0,0,.4);
-    }
+body{
+  margin:0;
+  background:#0f172a;
+  color:#fff;
+  display:flex;
+  justify-content:center;
+}
 
-    h1 {
-      margin: 0;
-      text-align: center;
-      font-size: 24px;
-    }
+.wrapper{
+  width:100%;
+  max-width:420px;
+  padding:14px;
+}
 
-    .subtitle {
-      text-align: center;
-      font-size: 13px;
-      opacity: 0.8;
-      margin-top: 6px;
-      margin-bottom: 16px;
-    }
+.frame{
+  background:rgba(59,130,246,0.12);
+  border:2px solid rgba(59,130,246,0.35);
+  border-radius:22px;
+  padding:16px;
+}
 
-    /* === INPUT SOAL === */
-    textarea {
-      width: 100%;
-      height: 90px;
-      resize: none;
-      border-radius: 14px;
-      border: 2px solid #000;
-      padding: 12px;
-      font-size: 14px;
-      outline: none;
-    }
+/* ===== HEADER ===== */
+h1{
+  text-align:center;
+  margin:6px 0 4px;
+  font-size:24px;
+}
 
-    .count {
-      text-align: right;
-      font-size: 11px;
-      opacity: .7;
-      margin-top: 4px;
-    }
+.subtitle{
+  text-align:center;
+  font-size:14px;
+  opacity:.9;
+  margin-bottom:14px;
+}
+.subtitle span{display:block}
 
-    button.generate {
-      width: 100%;
-      margin-top: 14px;
-      padding: 14px;
-      border-radius: 14px;
-      border: none;
-      background: #6aa7ff;
-      color: #000;
-      font-weight: bold;
-      font-size: 15px;
-      cursor: pointer;
-    }
+/* ===== INPUT ===== */
+textarea{
+  width:100%;
+  height:90px;
+  padding:12px;
+  border-radius:14px;
+  resize:none;
+  outline:none;
+  font-size:14px;
 
-    /* === HASIL === */
-    .result {
-      margin-top: 18px;
-      background: #1a2f4d;
-      border-radius: 18px;
-      padding: 14px;
-    }
+  /* ✅ GARIS TEPI HITAM */
+  border:2px solid #000;
+}
 
-    /* SOALAN (DIGABUNG) */
-    .soalan-box {
-      background: #fff;
-      color: #000;
-      border-radius: 16px;
-      padding: 14px;
-      text-align: center;
-      font-weight: bold;
-      line-height: 1.3;
-      min-height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+.counter{
+  text-align:right;
+  font-size:12px;
+  opacity:.7;
+  margin-top:4px;
+}
 
-    /* FONT AUTO SCALE */
-    .soalan-text {
-      font-size: clamp(14px, 4vw, 18px);
-      word-break: break-word;
-    }
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background:#60a5fa;
+  color:#fff;
+  font-size:16px;
+  margin-top:12px;
+  font-weight:600;
+}
 
-    /* GAMBAR */
-    .image-wrapper {
-      margin-top: 12px;
-      border-radius: 16px;
-      overflow: hidden;
-      height: 340px;
-    }
+/* ===== RESULT ===== */
+.result-card{
+  background:rgba(15,23,42,0.6);
+  border-radius:20px;
+  padding:14px;
+  margin-top:16px;
+}
 
-    .image-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+.photo-wrap{
+  position:relative;
+  border-radius:18px;
+  overflow:hidden;
+  height:420px;
+}
 
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 14px;
-    }
+/* IMAGE FIXED */
+.photo-wrap img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 
-    .actions button {
-      flex: 1;
-      padding: 12px;
-      border-radius: 14px;
-      border: none;
-      background: #22344f;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-    }
+/* ===== SOALAN DIGABUNG ===== */
+.soalan-text{
+  position:absolute;
+  top:12px;
+  left:14px;
+  right:14px;
+  background:#fff;
+  color:#000;
+  padding:16px 14px;
+  border-radius:14px;
+  font-weight:700;
+  text-align:center;
+  height:120px;
+  overflow:hidden;
+  font-size:18px;
+  z-index:2;
+}
 
-    footer {
-      text-align: center;
-      margin-top: 14px;
-      font-size: 12px;
-      opacity: .7;
-    }
+/* BUTTONS */
+.action{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+}
 
-    footer a {
-      color: #7fb3ff;
-      text-decoration: none;
-    }
-  </style>
+.action button{
+  flex:1;
+  background:#1e293b;
+}
+
+/* FOOTER */
+footer{
+  margin-top:18px;
+  padding:14px;
+  border:2px solid rgba(255,255,255,0.35);
+  border-radius:14px;
+  text-align:center;
+  font-size:14px;
+  font-weight:600;
+  opacity:.95;
+}
+</style>
 </head>
 
 <body>
+<div class="wrapper">
+<div class="frame">
 
-  <div class="frame">
+<h1>Ustadz Quote Generator</h1>
+<div class="subtitle">
+  <span>Buat Soalan Ustadz Dengan Mudah</span>
+  <span>(Hanya Untuk Have Fun)</span>
+</div>
 
-    <h1>Ustadz Quote Generator</h1>
-    <div class="subtitle">
-      Buat Soalan Ustadz Dengan Mudah<br>(Hanya Untuk Have Fun)
+<textarea id="inputText" maxlength="200"
+oninput="countChar()"
+placeholder="Tulis soalan di sini..."></textarea>
+<div class="counter"><span id="count">0</span>/200</div>
+
+<button onclick="generate()">Generate</button>
+
+<div class="result-card">
+  <div class="photo-wrap" id="capture">
+
+    <div class="soalan-text" id="soalanText">
+      Soalan<br><br>
+      Contoh Soalan Akan Muncul Di Sini
     </div>
 
-    <textarea id="input" maxlength="200" placeholder="Tulis soalan di sini..."></textarea>
-    <div class="count"><span id="count">0</span>/200</div>
-
-    <button class="generate" onclick="generate()">Generate</button>
-
-    <div class="result" id="result" style="display:none;">
-      <div class="soalan-box">
-        <div class="soalan-text" id="outputText">
-          Contoh Soalan Akan Muncul Di Sini
-        </div>
-      </div>
-
-      <div class="image-wrapper">
-        <img src="ustadz.jpg" alt="Ustadz">
-      </div>
-
-      <div class="actions">
-        <button onclick="download()">Download</button>
-        <button onclick="resetAll()">Reset</button>
-      </div>
-    </div>
-
-    <footer>
-      Developed By Arrz · 
-      <a href="https://t.me/usernamekamu" target="_blank">My Telegram</a>
-    </footer>
-
+    <img src="foto.jpg" alt="ustadz">
   </div>
 
-  <script>
-    const input = document.getElementById("input");
-    const count = document.getElementById("count");
+  <div class="action">
+    <button onclick="downloadImage()">Download</button>
+    <button onclick="resetAll()">Reset</button>
+  </div>
+</div>
 
-    input.addEventListener("input", () => {
-      count.textContent = input.value.length;
-    });
+<footer>
+  Developed By Arrz<br><br>
+  My Number<br>
+  +6285786145216<br><br>
+  My Telegram<br>
+  @arzoffc
+</footer>
 
-    function generate() {
-      const text = input.value.trim();
-      if (!text) return;
+</div>
+</div>
 
-      document.getElementById("outputText").textContent = text;
-      document.getElementById("result").style.display = "block";
-    }
+<script>
+function countChar(){
+  document.getElementById("count").innerText =
+  document.getElementById("inputText").value.length;
+}
 
-    function resetAll() {
-      input.value = "";
-      count.textContent = "0";
-      document.getElementById("result").style.display = "none";
-    }
+function generate(){
+  const text = document.getElementById("inputText").value.trim();
+  const target = document.getElementById("soalanText");
+  target.innerText = "Soalan\n\n" + (text || "Contoh Soalan Akan Muncul Di Sini");
+  autoResizeText(target);
+}
 
-    function download() {
-      alert("Fitur download bisa ditambahkan pakai html2canvas");
-    }
-  </script>
+function autoResizeText(el){
+  let size = 18;
+  el.style.fontSize = size+"px";
+  while(el.scrollHeight > el.clientHeight && size > 12){
+    size--;
+    el.style.fontSize = size+"px";
+  }
+}
+
+function downloadImage(){
+  html2canvas(document.getElementById("capture"),{
+    scale:2,
+    backgroundColor:null,
+    useCORS:true
+  }).then(canvas=>{
+    const a = document.createElement("a");
+    a.download="ustadz-quote.png";
+    a.href=canvas.toDataURL("image/png");
+    a.click();
+  });
+}
+
+function resetAll(){
+  document.getElementById("inputText").value="";
+  document.getElementById("count").innerText="0";
+  document.getElementById("soalanText").innerText="Soalan\n\nContoh Soalan Akan Muncul Di Sini";
+}
+</script>
 
 </body>
 </html>
