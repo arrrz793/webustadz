@@ -29,7 +29,7 @@ body{
 
 h1{
   text-align:center;
-  margin:8px 0 4px;
+  margin:8px 0 2px;
   font-size:24px;
 }
 
@@ -38,7 +38,10 @@ h1{
   font-size:14px;
   opacity:.85;
   margin-bottom:14px;
-  white-space:nowrap;
+}
+
+.subtitle span{
+  display:block;
 }
 
 textarea{
@@ -72,7 +75,7 @@ button{
 }
 
 .result-card{
-  background:#243447;
+  background:rgba(255,255,255,0.05);
   border-radius:20px;
   padding:14px;
   margin-top:16px;
@@ -80,7 +83,7 @@ button{
 
 .photo-wrap{
   position:relative;
-  border-radius:16px;
+  border-radius:18px;
   overflow:hidden;
 }
 
@@ -89,9 +92,25 @@ button{
   display:block;
 }
 
+/* === HEADER HITAM SOALAN === */
+.soalan-header{
+  position:absolute;
+  top:10px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#000;
+  color:#fff;
+  padding:6px 18px;
+  border-radius:999px;
+  font-weight:600;
+  font-size:14px;
+  z-index:2;
+}
+
+/* === TEKS SOALAN === */
 .soalan-text{
   position:absolute;
-  top:16px;
+  top:48px;
   left:16px;
   right:16px;
   background:#fff;
@@ -103,6 +122,7 @@ button{
   max-height:90px;
   overflow:hidden;
   font-size:15px;
+  z-index:1;
 }
 
 .action{
@@ -126,26 +146,6 @@ footer{
   font-weight:600;
   opacity:.9;
 }
-
-.telegram-link{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  margin:8px 0;
-  color:#7ab8ff;
-  text-decoration:none;
-  font-weight:600;
-}
-
-.telegram-link:hover{
-  opacity:.8;
-}
-
-.tg-icon{
-  width:18px;
-  height:18px;
-  fill:currentColor;
-}
 </style>
 </head>
 
@@ -153,7 +153,10 @@ footer{
 <div class="container">
 
 <h1>Ustadz Quote Generator</h1>
-<div class="subtitle">Buat Soalan Ustadz Dengan Mudah (Hanya Untuk Have Fun)</div>
+<div class="subtitle">
+  <span>Buat Soalan Ustadz Dengan Mudah</span>
+  <span>(Hanya Untuk Have Fun)</span>
+</div>
 
 <textarea id="inputText" maxlength="200"
 oninput="countChar()"
@@ -164,10 +167,14 @@ placeholder="Tulis soalan di sini..."></textarea>
 
 <div class="result-card">
   <div class="photo-wrap" id="capture">
+
+    <div class="soalan-header">Soalan</div>
+
     <div class="soalan-text" id="soalanText">
       Contoh Soalan Akan Muncul Di Sini
     </div>
-    <img id="photo" src="foto.jpg" alt="ustadz">
+
+    <img src="foto.jpg" alt="ustadz">
   </div>
 
   <div class="action">
@@ -177,19 +184,13 @@ placeholder="Tulis soalan di sini..."></textarea>
 </div>
 
 <footer>
-  Developed By Arrz<br>
+  Developed By Arrz<br><br>
 
-  <a href="https://t.me/arrz" target="_blank" class="telegram-link">
-    <svg viewBox="0 0 24 24" class="tg-icon">
-      <path d="M9.993 15.674 9.6 20.8c.57 0 .82-.245 1.12-.54l2.688-2.563 5.573 4.078c1.02.56 1.75.265 2.02-.94L24 3.9c.33-1.5-.54-2.1-1.53-1.74L1.11 10.06c-1.46.57-1.44 1.38-.26 1.75l5.47 1.71L18.87 6.6c.59-.39 1.13-.17.69.22z"/>
-    </svg>
-    My Telegram
-  </a>
+  My Number<br>
+  +6285786145216<br><br>
 
-  <div>
-    My Number<br>
-    +6285786145216
-  </div>
+  My Telegram<br>
+  @arzoffc
 </footer>
 
 </div>
@@ -220,8 +221,8 @@ function downloadImage(){
   const area = document.getElementById("capture");
   html2canvas(area,{
     scale:2,
-    useCORS:true,
-    backgroundColor:null
+    backgroundColor:null,
+    useCORS:true
   }).then(canvas=>{
     const a = document.createElement("a");
     a.download = "ustadz-quote.png";
