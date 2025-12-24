@@ -5,18 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ustadz Quote Generator</title>
 
-<!-- html2canvas (WAJIB UNTUK DOWNLOAD) -->
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
 <style>
 *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto}
+
+:root{
+  --bg-main:#0b1d30;
+  --bg-card:rgba(80,130,180,0.35);
+  --text:#ffffff;
+}
+
+body.light{
+  --bg-main:#e9f1ff;
+  --bg-card:rgba(255,255,255,0.7);
+  --text:#0b1d30;
+}
+
 body{
   margin:0;
   min-height:100vh;
-  background:#0b1d30;
+  background:var(--bg-main);
   display:flex;
   justify-content:center;
-  color:#fff;
+  color:var(--text);
 }
 
 .wrapper{
@@ -24,9 +34,28 @@ body{
   max-width:420px;
   margin:16px;
   padding:16px;
-  background:rgba(80,130,180,0.35);
+  background:var(--bg-card);
   backdrop-filter:blur(10px);
   border-radius:20px;
+  position:relative;
+}
+
+.toggle{
+  position:absolute;
+  top:14px;
+  right:14px;
+  background:rgba(0,0,0,0.3);
+  border:none;
+  border-radius:50%;
+  width:36px;
+  height:36px;
+  color:#fff;
+  font-size:18px;
+}
+
+body.light .toggle{
+  background:rgba(0,0,0,0.1);
+  color:#000;
 }
 
 h1{
@@ -49,10 +78,9 @@ textarea{
   border-radius:14px;
   border:1.5px solid rgba(255,255,255,0.6);
   background:rgba(255,255,255,0.15);
-  color:#fff;
+  color:var(--text);
   font-size:15px;
   outline:none;
-  margin:0 auto;
   display:block;
 }
 
@@ -73,6 +101,11 @@ button{
   color:#fff;
   font-size:16px;
   font-weight:600;
+}
+
+button:disabled{
+  opacity:.5;
+  cursor:not-allowed;
 }
 
 .result{
@@ -154,36 +187,38 @@ button{
 <body>
 <div class="wrapper">
 
-  <h1>Ustadz Quote Generator</h1>
-  <div class="subtitle">Buat Soalan Ustadz Dengan Mudah, Hanya Untuk Have Fun.</div>
+<button class="toggle" onclick="toggleMode()">🌙</button>
 
-  <textarea id="input" maxlength="200" placeholder="Pak ustadz apa hukumnya..."></textarea>
-  <div class="counter"><span id="count">0</span>/200</div>
+<h1>Ustadz Quote Generator</h1>
+<div class="subtitle">Buat Soalan Ustadz Dengan Mudah, Hanya Untuk Have Fun.</div>
 
-  <button onclick="generate()">Generate</button>
+<textarea id="input" maxlength="200" placeholder="Pak ustadz apa hukumnya..."></textarea>
+<div class="counter"><span id="count">0</span>/200</div>
 
-  <div class="result" id="result-card">
-    <div class="photo-box">
-      <img src="foto.jpg" alt="ustadz">
-      <div class="soalan-box">
-        <div class="soalan-header">Soalan</div>
-        <div class="soalan-text" id="soalanText"></div>
-      </div>
-    </div>
+<button onclick="generate()">Generate</button>
 
-    <div class="actions">
-      <button onclick="downloadImage()">Download</button>
-      <button onclick="resetAll()">Reset</button>
+<div class="result">
+  <div class="photo-box">
+    <img src="foto.jpg" alt="ustadz">
+    <div class="soalan-box">
+      <div class="soalan-header">Soalan</div>
+      <div class="soalan-text" id="soalanText"></div>
     </div>
   </div>
 
-  <div class="footer">
-    Developed By Arrz<br>
-    My Number<br>
-    +6285786145216<br>
-    My Telegram<br>
-    @arzoffc
+  <div class="actions">
+    <button id="downloadBtn" disabled>Download</button>
+    <button onclick="resetAll()">Reset</button>
   </div>
+</div>
+
+<div class="footer">
+  Developed By Arrz<br>
+  My Number<br>
+  +6285786145216<br>
+  My Telegram<br>
+  @arzoffc
+</div>
 
 </div>
 
@@ -191,6 +226,9 @@ button{
 const input=document.getElementById("input");
 const count=document.getElementById("count");
 const soalanText=document.getElementById("soalanText");
+const downloadBtn=document.getElementById("downloadBtn");
+const body=document.body;
+const toggle=document.querySelector(".toggle");
 
 input.addEventListener("input",()=>{
   count.textContent=input.value.length;
@@ -209,34 +247,26 @@ function generate(){
   if(!input.value.trim()) return;
   soalanText.textContent=input.value;
   autoResize();
+  downloadBtn.disabled=false;
 }
 
 function resetAll(){
   input.value="";
   count.textContent=0;
   soalanText.textContent="";
+  downloadBtn.disabled=true;
 }
 
-/* === DOWNLOAD FIX (ANDROID & VERCEL AMAN) === */
-function downloadImage(){
-  const target=document.getElementById("result-card");
+function toggleMode(){
+  body.classList.toggle("light");
+  const isLight=body.classList.contains("light");
+  toggle.textContent=isLight?"☀️":"🌙";
+  localStorage.setItem("mode",isLight?"light":"dark");
+}
 
-  html2canvas(target,{
-    scale:2,
-    useCORS:true,
-    backgroundColor:null
-  }).then(canvas=>{
-    canvas.toBlob(blob=>{
-      const url=URL.createObjectURL(blob);
-      const a=document.createElement("a");
-      a.href=url;
-      a.download="ustadz-quote.png";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    },"image/png");
-  });
+if(localStorage.getItem("mode")==="light"){
+  body.classList.add("light");
+  toggle.textContent="☀️";
 }
 </script>
 
