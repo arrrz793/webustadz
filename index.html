@@ -5,274 +5,207 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ustadz Quote Generator</title>
 
-<!-- FONT -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <style>
-:root {
-  --bg: #6ea8ff;
-  --card: #ffffff;
-  --text: #000000;
-  --dark: #1e3a5f;
-  --border: #000000;
+:root{
+  --bg:#e9f2ff;
+  --card:#1f3b5b;
+  --card-soft:#243f5f;
+  --text:#ffffff;
+  --box:#ffffff;
+  --border:#8ab4ff;
 }
 
-body.dark {
-  --bg: #0f2a44;
-  --card: #1e3a5f;
-  --text: #ffffff;
-  --dark: #000000;
-  --border: #000000;
+body.light{
+  --bg:#e9f2ff;
+  --card:#1f3b5b;
+  --card-soft:#243f5f;
+  --text:#ffffff;
+  --box:#ffffff;
 }
 
-* {
-  box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
+body.dark{
+  --bg:#0e1a2b;
+  --card:#152a45;
+  --card-soft:#1c3555;
+  --text:#ffffff;
+  --box:#1f3b5b;
 }
 
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  display: flex;
-  justify-content: center;
-  padding: 20px;
-  animation: fadeIn 0.6s ease;
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:var(--bg);
+  transition:.3s;
 }
 
-@keyframes fadeIn {
-  from {opacity: 0; transform: translateY(10px);}
-  to {opacity: 1; transform: translateY(0);}
+.container{
+  max-width:420px;
+  margin:20px auto;
+  padding:15px;
+  background:var(--card);
+  color:var(--text);
+  border-radius:16px;
+  position:relative;
 }
 
-.container {
-  width: 100%;
-  max-width: 420px;
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-.card {
-  background: var(--card);
-  border-radius: 20px;
-  padding: 20px;
+.toggle{
+  position:fixed;
+  top:28px;
+  right:calc(50% - 210px + 20px);
+  background:var(--card-soft);
+  border-radius:50%;
+  width:42px;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  z-index:999;
 }
 
-/* HEADER */
-.header {
-  position: relative;
-  text-align: center;
+input{
+  width:100%;
+  padding:14px;
+  margin:15px 0;
+  border-radius:12px;
+  border:2px solid var(--border);
+  font-size:16px;
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 22px;
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:#7fb2ff;
+  font-size:16px;
+  cursor:pointer;
 }
 
-.header p {
-  font-size: 13px;
-  opacity: 0.8;
+.result{
+  margin-top:20px;
+  background:var(--card-soft);
+  border-radius:16px;
+  padding:15px;
 }
 
-/* TOGGLE */
-.toggle {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #2f80ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  user-select: none;
+.soalan-title{
+  background:black;
+  padding:10px;
+  border-radius:12px 12px 0 0;
+  text-align:center;
+  font-weight:bold;
 }
 
-.toggle span {
-  font-size: 18px;
-  color: #fff;
+.soalan-box{
+  background:var(--box);
+  color:black;
+  margin:10px;
+  padding:12px;
+  border-radius:12px;
+  text-align:center;
 }
 
-/* INPUT */
-textarea {
-  width: 100%;
-  height: 80px;
-  margin-top: 16px;
-  border-radius: 14px;
-  padding: 12px;
-  font-size: 15px;
-  resize: none;
-  border: 2px solid #7db1ff;
-  outline: none;
-  background: transparent;
-  color: var(--text);
+.photo-wrap{
+  margin-top:10px;
+  border-radius:16px;
+  overflow:hidden;
 }
 
-.counter {
-  text-align: right;
-  font-size: 12px;
-  opacity: 0.7;
-  margin-top: 4px;
+.photo-wrap img{
+  width:100%;
+  display:block;
 }
 
-/* BUTTON */
-button {
-  width: 100%;
-  margin-top: 14px;
-  padding: 12px;
-  border-radius: 14px;
-  border: none;
-  background: #7db1ff;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
+.btn-group{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
 }
 
-/* RESULT */
-.result {
-  margin-top: 20px;
-  background: var(--dark);
-  border-radius: 18px;
-  padding: 14px;
-}
-
-.result-title {
-  background: #000;
-  color: #fff;
-  padding: 8px;
-  border-radius: 12px;
-  text-align: center;
-  font-weight: 600;
-}
-
-.photo {
-  position: relative;
-  margin-top: 10px;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-.photo img {
-  width: 100%;
-  display: block;
-}
-
-/* TEXT INSIDE PHOTO */
-.overlay {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  right: 12px;
-  background: rgba(255,255,255,0.9);
-  border-radius: 12px;
-  padding: 10px;
-  text-align: center;
-  font-weight: 600;
-  color: #000;
-  font-size: clamp(14px, 4vw, 18px);
-}
-
-/* ACTION */
-.actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.actions button {
-  flex: 1;
-  background: #3c4f63;
-}
-
-/* FOOTER */
-.footer {
-  margin-top: 20px;
-  border-top: 2px solid var(--border);
-  padding-top: 14px;
-  text-align: center;
-  font-size: 13px;
+.footer{
+  margin-top:20px;
+  border-top:2px solid white;
+  padding-top:10px;
+  text-align:center;
+  font-size:14px;
 }
 </style>
 </head>
 
-<body>
-<div class="container">
-  <div class="card">
+<body class="light">
 
-    <div class="header">
-      <h1>Ustadz Quote Generator</h1>
-      <p>Buat Soalan Ustadz Dengan Mudah<br>(Hanya Untuk Have Fun)</p>
+<div class="toggle" onclick="toggleMode()">🌙</div>
 
-      <!-- TOGGLE TIDAK BERGERAK -->
-      <div class="toggle" id="toggle">
-        <span id="icon">🌙</span>
-      </div>
-    </div>
+<div class="container" id="capture">
 
-    <textarea id="input" maxlength="200" placeholder="Tulis soalan..."></textarea>
-    <div class="counter"><span id="count">0</span>/200</div>
-
-    <button onclick="generate()">Generate</button>
-
-    <div class="result" id="result" style="display:none;">
-      <div class="result-title">Soalan</div>
-
-      <div class="photo">
-        <img src="foto.jpg" alt="foto">
-        <div class="overlay" id="output"></div>
-      </div>
-
-      <div class="actions">
-        <button onclick="download()">Download</button>
-        <button onclick="resetAll()">Reset</button>
-      </div>
-    </div>
-
-    <div class="footer">
-      Developed By Arrz<br>
-      My Number<br>
-      +6285786145216<br>
-      My Telegram<br>
-      @arzoffc
-    </div>
-
+  <div class="header">
+    <h2>Ustadz Quote Generator</h2>
   </div>
+
+  <p>Buat Soalan Ustadz Dengan Mudah<br>(Hanya Untuk Have Fun)</p>
+
+  <input id="inputText" placeholder="Masukkan soalan...">
+
+  <button onclick="generate()">Generate</button>
+
+  <div class="result" id="result">
+    <div class="soalan-title">Soalan</div>
+    <div class="soalan-box" id="soalanText">Contoh Soalan Akan Muncul Di Sini</div>
+
+    <div class="photo-wrap">
+      <img id="photo" src="https://i.imgur.com/8Km9tLL.jpg">
+    </div>
+
+    <div class="btn-group">
+      <button onclick="download()">Download</button>
+      <button onclick="resetAll()">Reset</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    Developed By Arrz<br>
+    My Number<br>
+    +6285786145216<br>
+    My Telegram<br>
+    @arzoffc
+  </div>
+
 </div>
 
 <script>
-const input = document.getElementById('input');
-const count = document.getElementById('count');
-const result = document.getElementById('result');
-const output = document.getElementById('output');
-const toggle = document.getElementById('toggle');
-const icon = document.getElementById('icon');
-
-input.addEventListener('input', () => {
-  count.textContent = input.value.length;
-});
-
-function generate() {
-  if (!input.value.trim()) return;
-  output.textContent = input.value;
-  result.style.display = 'block';
+function toggleMode(){
+  document.body.classList.toggle("dark");
+  document.body.classList.toggle("light");
 }
 
-function resetAll() {
-  input.value = '';
-  count.textContent = '0';
-  result.style.display = 'none';
+function generate(){
+  const val=document.getElementById("inputText").value;
+  if(val) document.getElementById("soalanText").innerText=val;
 }
 
-toggle.onclick = () => {
-  document.body.classList.toggle('dark');
-  icon.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
-};
+function resetAll(){
+  document.getElementById("inputText").value="";
+  document.getElementById("soalanText").innerText="Contoh Soalan Akan Muncul Di Sini";
+}
 
-function download() {
-  alert('Download logic siap ditambahkan (html2canvas)');
+function download(){
+  html2canvas(document.getElementById("capture"),{scale:2}).then(canvas=>{
+    const a=document.createElement("a");
+    a.href=canvas.toDataURL("image/png");
+    a.download="ustadz-quote.png";
+    a.click();
+  });
 }
 </script>
+
 </body>
 </html>
