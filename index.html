@@ -1,269 +1,265 @@
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html><html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ustadz Quote Generator</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ustadz Quote Generator</title>  <!-- Font rapi untuk input -->  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">  <style>
+    :root {
+      --bg: #0f2742;
+      --card: rgba(255,255,255,0.08);
+      --primary: #6fa8ff;
+      --text: #ffffff;
+      --border: rgba(255,255,255,0.15);
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    body.light {
+      --bg: #e9f1ff;
+      --card: #cfe2ff;
+      --primary: #4a90ff;
+      --text: #0f2742;
+      --border: #0f2742;
+    }
 
-<style>
-:root{
-  --blue:#6aa9ff;
-  --blue-dark:#1f3c5c;
-  --card:#ffffff;
-  --text:#000;
-}
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
 
-body{
-  margin:0;
-  font-family:'Poppins',sans-serif;
-  background:var(--blue);
-  display:flex;
-  justify-content:center;
-  padding:20px;
-}
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 24px 12px;
+      animation: fadeIn 0.8s ease;
+    }
 
-body.dark{
-  background:#0b2239;
-}
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-.card{
-  width:100%;
-  max-width:420px;
-  background:var(--card);
-  border-radius:20px;
-  padding:18px;
-  animation:fade .4s ease-out;
-}
+    .container {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card);
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      position: relative;
+    }
 
-body.dark .card{
-  background:#243f5c;
-  color:#fff;
-}
+    header {
+      position: relative;
+      text-align: center;
+      margin-bottom: 14px;
+    }
 
-/* HEADER */
-.header{
-  position:relative;
-  text-align:center;
-}
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+    }
 
-.header h1{
-  margin:0;
-  font-size:24px;
-  font-weight:800;
-  white-space:nowrap;
-}
+    header p {
+      margin: 6px 0 0;
+      font-size: 13px;
+      opacity: 0.85;
+    }
 
-.header p{
-  font-size:13px;
-  margin:6px 0 0;
-}
+    /* Toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 74px;
+      right: calc(50% - 210px + 14px);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      background: var(--primary);
+      color: #fff;
+      font-size: 18px;
+      z-index: 100;
+    }
 
-/* TOGGLE DIPINDAHKAN */
-.toggle{
-  position:absolute;
-  right:4px;
-  top:34px;
-  width:34px;
-  height:34px;
-  border-radius:50%;
-  background:#ffd54f;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-}
+    textarea {
+      width: 100%;
+      min-height: 90px;
+      resize: none;
+      border-radius: 12px;
+      border: 2px solid var(--primary);
+      background: transparent;
+      color: var(--text);
+      padding: 12px;
+      font-size: 14px;
+      outline: none;
+    }
 
-body.dark .toggle{
-  background:#2e5fa8;
-}
+    .count {
+      text-align: right;
+      font-size: 12px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
 
-/* INPUT */
-textarea{
-  width:100%;
-  height:80px;
-  border-radius:14px;
-  padding:12px;
-  margin-top:12px;
-  border:2px solid #ccc;
-  font-size:16px;
-  resize:none;
-  font-family:'Poppins',sans-serif;
-}
+    button.primary {
+      width: 100%;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 14px;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
 
-body.dark textarea{
-  background:#345a7c;
-  border-color:#5f8fcf;
-  color:#fff;
-}
+    .result {
+      margin-top: 18px;
+      background: var(--card);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
 
-.counter{
-  text-align:right;
-  font-size:12px;
-  margin-top:4px;
-}
+    .result h3 {
+      margin: 0;
+      padding: 10px;
+      background: #000;
+      color: #fff;
+      font-size: 14px;
+      text-align: center;
+    }
 
-button{
-  width:100%;
-  margin-top:12px;
-  padding:12px;
-  border:none;
-  border-radius:14px;
-  font-size:18px;
-  font-weight:700;
-  background:#6ea8fe;
-  color:#fff;
-  cursor:pointer;
-}
+    body.light .result h3 {
+      background: var(--primary);
+      color: #fff;
+    }
 
-/* RESULT */
-.result{
-  margin-top:16px;
-  background:var(--blue-dark);
-  padding:14px;
-  border-radius:18px;
-}
+    .photo-box {
+      position: relative;
+    }
 
-body.dark .result{
-  background:#1b3d63;
-}
+    .photo-box img {
+      width: 100%;
+      display: block;
+    }
 
-/* CAPTURE FIX */
-.capture{
-  border-radius:16px;
-  overflow:hidden; /* ⬅ PENTING BIAR TIDAK CACAT */
-  background:#000;
-}
+    /* Kotak soal di DALAM foto */
+    .quote-box {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      background: rgba(255,255,255,0.9);
+      color: #000;
+      border-radius: 10px;
+      padding: 10px;
+      font-weight: 600;
+      text-align: center;
+      font-size: clamp(14px, 4vw, 18px);
+    }
 
-.soalan{
-  background:#000;
-  color:#fff;
-  text-align:center;
-  padding:8px;
-  font-weight:700;
-}
+    .actions {
+      display: flex;
+      gap: 10px;
+      padding: 12px;
+    }
 
-.quote{
-  background:#fff;
-  text-align:center;
-  font-size:22px;
-  font-weight:800;
-  padding:18px;
-}
+    .actions button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      background: #3a4b5c;
+      color: #fff;
+    }
 
-.image{
-  width:100%;
-  display:block;
-}
+    footer {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 13px;
+      border-top: 2px solid var(--border);
+      padding-top: 12px;
+    }
 
-/* ACTION */
-.actions{
-  display:flex;
-  gap:10px;
-  margin-top:12px;
-}
+    footer strong {
+      display: block;
+      margin-top: 6px;
+    }
+  </style></head>
+<body><button class="theme-toggle" id="toggle">🌙</button>
 
-.actions button{
-  flex:1;
-  background:#3b4a5a;
-}
+  <div class="container">
+    <header>
+      <h1>Ustadz Quote Generator</h1>
+      <p>Buat Soalan Ustadz Dengan Mudah<br>(Hanya Untuk Have Fun)</p>
+    </header><textarea id="input" maxlength="200" placeholder="Tulis soalan..."></textarea>
+<div class="count" id="count">0/200</div>
 
-/* FOOTER FIX */
-.footer{
-  margin-top:16px;
-  padding:14px;
-  border:3px solid #ffffff;
-  border-radius:14px;
-  text-align:center;
-  font-weight:800;
-  font-size:15px;
-}
+<button class="primary" id="generate">Generate</button>
 
-body.dark .footer{
-  border-color:#9fc5ff;
-}
-
-@keyframes fade{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1;transform:none}
-}
-</style>
-</head>
-
-<body>
-<div class="card">
-
-  <div class="header">
-    <h1>Ustadz Quote Generator</h1>
-    <p>Buat Soalan Ustadz Dengan Mudah<br>(Hanya Untuk Have Fun)</p>
-    <div class="toggle" onclick="toggleMode()">🌙</div>
+<div class="result" id="result" style="display:none;">
+  <h3>Soalan</h3>
+  <div class="photo-box" id="capture">
+    <img src="https://i.imgur.com/5QZnYyF.jpg" alt="ustadz" />
+    <div class="quote-box" id="quote">...</div>
   </div>
-
-  <textarea id="text" maxlength="200" placeholder="Tulis soalan..."></textarea>
-  <div class="counter"><span id="count">0</span>/200</div>
-
-  <button onclick="generate()">Generate</button>
-
-  <div class="result">
-    <div class="capture" id="capture">
-      <div class="soalan">Soalan</div>
-      <div class="quote" id="quote">...</div>
-      <img src="foto.jpg" class="image">
-    </div>
-
-    <div class="actions">
-      <button onclick="download()">Download</button>
-      <button onclick="resetAll()">Reset</button>
-    </div>
+  <div class="actions">
+    <button id="download">Download</button>
+    <button id="reset">Reset</button>
   </div>
-
-  <div class="footer">
-    Developed By Arrz<br>
-    My Number<br>
-    +6285786145216<br>
-    My Telegram<br>
-    @arzoffc
-  </div>
-
 </div>
 
-<script>
-const text=document.getElementById("text");
-const count=document.getElementById("count");
-const quote=document.getElementById("quote");
+<footer>
+  Developed By Arrz
+  <strong>My Number</strong>
+  +6285786145216
+  <strong>My Telegram</strong>
+  @arzoffc
+</footer>
 
-text.addEventListener("input",()=>{
-  count.textContent=text.value.length;
-});
+  </div>  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>  <script>
+    const input = document.getElementById('input');
+    const count = document.getElementById('count');
+    const quote = document.getElementById('quote');
+    const result = document.getElementById('result');
+    const toggle = document.getElementById('toggle');
 
-function generate(){
-  quote.textContent=text.value||"...";
-}
+    input.addEventListener('input', () => {
+      count.textContent = `${input.value.length}/200`;
+    });
 
-function resetAll(){
-  text.value="";
-  quote.textContent="...";
-  count.textContent="0";
-}
+    document.getElementById('generate').onclick = () => {
+      if (!input.value.trim()) return;
+      quote.textContent = input.value;
+      result.style.display = 'block';
+      result.scrollIntoView({ behavior: 'smooth' });
+    };
 
-function toggleMode(){
-  document.body.classList.toggle("dark");
-}
+    document.getElementById('reset').onclick = () => {
+      input.value = '';
+      count.textContent = '0/200';
+      result.style.display = 'none';
+    };
 
-function download(){
-  html2canvas(document.getElementById("capture"),{
-    scale:2,
-    backgroundColor:null
-  }).then(canvas=>{
-    const a=document.createElement("a");
-    a.download="hasil.png";
-    a.href=canvas.toDataURL();
-    a.click();
-  });
-}
-</script>
+    document.getElementById('download').onclick = async () => {
+      const canvas = await html2canvas(document.getElementById('capture'));
+      const link = document.createElement('a');
+      link.download = 'ustadz-quote.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    };
 
-</body>
+    toggle.onclick = () => {
+      document.body.classList.toggle('light');
+      toggle.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
+    };
+  </script></body>
 </html>
