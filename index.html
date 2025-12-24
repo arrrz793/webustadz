@@ -1,174 +1,166 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Ustadz Quote Generator</title>
 
+<!-- html2canvas -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <style>
-*{
-  box-sizing:border-box;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto;
+:root{
+  --bg:#6aa9ff;
+  --card:#ffffff;
+  --text:#000;
+  --btn:#6ea8fe;
+  --dark-bg:#0b2239;
+  --dark-card:#243f5c;
+  --dark-text:#fff;
 }
 
 body{
   margin:0;
-  min-height:100vh;
-  background:#0b1d30;
+  font-family:system-ui;
+  background:var(--bg);
   display:flex;
   justify-content:center;
-  color:#fff;
+  padding:20px;
+  transition:.3s;
 }
 
-body.light{
-  background:#5fa8ff;
-  color:#000;
+body.dark{
+  background:var(--dark-bg);
+  color:var(--dark-text);
 }
 
-.wrapper{
+.card{
   width:100%;
   max-width:420px;
-  margin:20px;
-  padding:14px;
-  background:rgba(80,130,180,0.35);
-  backdrop-filter:blur(10px);
+  background:var(--card);
   border-radius:20px;
+  padding:18px;
   position:relative;
+  animation:masuk .45s ease-out both;
 }
 
-body.light .wrapper{
-  background:#fff;
+body.dark .card{
+  background:var(--dark-card);
 }
 
+/* ===== HEADER ===== */
+.header{
+  position:relative;
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.header h1{
+  margin:0;
+  font-size:24px;
+  font-weight:800;
+  white-space:nowrap; /* ⬅ cegah pecah baris */
+}
+
+.header p{
+  margin:4px 0 0;
+  font-size:13px;
+}
+
+/* TOGGLE */
 .toggle{
-  position:sticky;
-  top:10px;
-  float:right;
+  position:absolute;
+  top:0;
+  right:0;
   width:38px;
   height:38px;
   border-radius:50%;
-  border:none;
-  font-size:20px;
-  cursor:pointer;
-  background:#ffffff55;
   display:flex;
   align-items:center;
   justify-content:center;
+  cursor:pointer;
+  background:#ffd54f;
 }
 
-/* 🔵 MODE TERANG: lingkaran biru */
-body.light .toggle{
-  background:#4da3ff;
+body.dark .toggle{
+  background:#3a4a5f;
 }
 
-h1{
-  text-align:center;
-  margin:10px 0 4px;
+.toggle span{
+  font-size:18px;
 }
 
-.subtitle{
-  text-align:center;
-  font-size:14px;
-  margin-bottom:14px;
-}
-
+/* ===== INPUT ===== */
 textarea{
   width:100%;
-  min-height:90px;
-  padding:14px;
+  height:80px;
   border-radius:14px;
-  border:2px solid rgba(255,255,255,0.7);
-  background:rgba(255,255,255,0.15);
-  color:#fff;
-  font-size:15px;
-  outline:none;
+  padding:12px;
+  resize:none;
+  border:2px solid #ccc;
+  font-size:16px;
+  box-sizing:border-box;
 }
 
-body.light textarea{
-  background:#f4f7fb;
-  color:#000;
-  border-color:#000;
+body.dark textarea{
+  background:#425d78;
+  color:#fff;
+  border-color:#6b88a8;
 }
 
 .counter{
   text-align:right;
   font-size:12px;
-  opacity:.7;
   margin-top:4px;
 }
 
 button{
   width:100%;
-  margin-top:14px;
-  padding:14px;
-  border-radius:14px;
+  margin-top:12px;
+  padding:12px;
   border:none;
-  background:#6aa9ff;
+  border-radius:14px;
+  font-size:18px;
+  background:var(--btn);
   color:#fff;
-  font-size:16px;
-  font-weight:600;
+  font-weight:700;
+  cursor:pointer;
 }
 
+/* ===== RESULT ===== */
 .result{
-  margin-top:18px;
-  padding:12px;
-  background:rgba(0,0,0,0.35);
+  margin-top:16px;
+  background:#1b2f44;
+  padding:14px;
   border-radius:18px;
 }
 
-body.light .result{
-  background:#e6ecf3;
-}
-
-.photo-box{
-  position:relative;
-  overflow:hidden;
+.capture{
+  background:#000;
   border-radius:16px;
-}
-
-.photo-box img{
-  width:100%;
-  display:block;
-}
-
-.soalan-box{
-  position:absolute;
-  top:14px;
-  left:50%;
-  transform:translateX(-50%);
-  width:82%;
-  min-height:130px;
-  border-radius:14px;
   overflow:hidden;
-  background:#fff;
-  display:flex;
-  flex-direction:column;
 }
 
-.soalan-header{
-  background:#111;
+.soalan{
+  background:#000;
   color:#fff;
   text-align:center;
   padding:8px;
-  font-weight:600;
-  font-size:14px;
-  border-top-left-radius:14px;
-  border-top-right-radius:14px;
+  font-weight:700;
 }
 
-.soalan-text{
-  flex:1;
-  padding:14px;
-  color:#000;
+.quote{
+  background:#fff;
+  padding:18px;
   text-align:center;
-  font-weight:700;
   font-size:22px;
-  line-height:1.25;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  font-weight:800;
+  border-radius:0 0 16px 16px;
+}
+
+.image{
+  width:100%;
+  display:block;
 }
 
 .actions{
@@ -178,113 +170,118 @@ body.light .result{
 }
 
 .actions button{
-  background:#2f3f50;
+  flex:1;
+  background:#3b4a5a;
 }
 
+/* ===== FOOTER ===== */
 .footer{
   margin-top:16px;
-  padding:12px;
-  border:3px solid rgba(255,255,255,0.9);
+  padding:14px;
+  border:3px solid #fff; /* ⬅ ditebalkan */
   border-radius:14px;
   text-align:center;
-  font-size:15px;
-  font-weight:700;
+  font-weight:800;       /* ⬅ ditebalkan */
+  font-size:15px;        /* ⬅ diperbesar */
 }
 
-body.light .footer{
-  border-color:#000;
+body.dark .footer{
+  border-color:#9fc5ff;
+}
+
+/* ===== ANIMASI AMAN ===== */
+@keyframes masuk{
+  from{
+    opacity:0;
+    transform:translateY(16px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
 }
 </style>
 </head>
 
 <body>
-<div class="wrapper">
+<div class="card">
 
-<button class="toggle" id="themeToggle">🌙</button>
+  <div class="header">
+    <h1>Ustadz Quote Generator</h1>
+    <p>Buat Soalan Ustadz Dengan Mudah<br>(Hanya Untuk Have Fun)</p>
 
-<h1>Ustadz Quote Generator</h1>
-<div class="subtitle">
-Buat Soalan Ustadz Dengan Mudah<br>
-(Hanya Untuk Have Fun)
-</div>
-
-<textarea id="input" maxlength="200" placeholder="Pak ustadz apa hukumnya..."></textarea>
-<div class="counter"><span id="count">0</span>/200</div>
-
-<button onclick="generate()">Generate</button>
-
-<div class="result">
-  <div class="photo-box" id="downloadArea">
-    <img src="foto.jpg" alt="ustadz">
-    <div class="soalan-box">
-      <div class="soalan-header">Soalan</div>
-      <div class="soalan-text" id="soalanText"></div>
+    <div class="toggle" onclick="toggleMode()">
+      <span id="icon">🌙</span>
     </div>
   </div>
 
-  <div class="actions">
-    <button onclick="downloadImage()">Download</button>
-    <button onclick="resetAll()">Reset</button>
-  </div>
-</div>
+  <textarea id="text" maxlength="200" placeholder="Tulis soalan..."></textarea>
+  <div class="counter"><span id="count">0</span>/200</div>
 
-<div class="footer">
-Developed By Arrz<br>
-My Number<br>
-+6285786145216<br>
-My Telegram<br>
-@arzoffc
-</div>
+  <button onclick="generate()">Generate</button>
+
+  <div class="result" id="result">
+    <div class="capture" id="capture">
+      <div class="soalan">Soalan</div>
+      <div class="quote" id="quote">...</div>
+      <img src="foto.jpg" class="image">
+    </div>
+
+    <div class="actions">
+      <button onclick="download()">Download</button>
+      <button onclick="resetAll()">Reset</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    Developed By Arrz<br>
+    My Number<br>
+    +6285786145216<br>
+    My Telegram<br>
+    @arzoffc
+  </div>
 
 </div>
 
 <script>
-const input=document.getElementById("input");
-const count=document.getElementById("count");
-const soalanText=document.getElementById("soalanText");
-const toggle=document.getElementById("themeToggle");
+const text = document.getElementById("text");
+const count = document.getElementById("count");
+const quote = document.getElementById("quote");
+const icon = document.getElementById("icon");
 
-input.addEventListener("input",()=>{
-  count.textContent=input.value.length;
+text.addEventListener("input",()=>{
+  count.textContent = text.value.length;
 });
 
-function autoResize(){
-  let size=22;
-  soalanText.style.fontSize=size+"px";
-  while(soalanText.scrollHeight>soalanText.offsetHeight && size>14){
-    size--;
-    soalanText.style.fontSize=size+"px";
-  }
-}
-
 function generate(){
-  if(!input.value.trim()) return;
-  soalanText.textContent=input.value;
-  autoResize();
+  quote.textContent = text.value || "...";
 }
 
 function resetAll(){
-  input.value="";
-  count.textContent=0;
-  soalanText.textContent="";
+  text.value="";
+  quote.textContent="...";
+  count.textContent="0";
 }
 
-function downloadImage(){
-  html2canvas(document.getElementById("downloadArea"),{
+function toggleMode(){
+  document.body.classList.toggle("dark");
+  icon.textContent = document.body.classList.contains("dark") ? "🌙" : "☀️";
+}
+
+function download(){
+  const el = document.getElementById("capture");
+
+  html2canvas(el,{
     scale:2,
     backgroundColor:null
   }).then(canvas=>{
     const link=document.createElement("a");
-    link.download="ustadz-quote.png";
-    link.href=canvas.toDataURL("image/png");
+    link.download="hasil.png";
+    link.href=canvas.toDataURL();
     link.click();
   });
 }
-
-toggle.onclick=()=>{
-  document.body.classList.toggle("light");
-  toggle.textContent=document.body.classList.contains("light") ? "☀️" : "🌙";
-};
 </script>
+
 </body>
 </html>
